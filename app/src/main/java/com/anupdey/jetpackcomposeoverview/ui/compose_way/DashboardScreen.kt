@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.anupdey.jetpackcomposeoverview.ui.compose_way.nav.Screen
 import com.anupdey.jetpackcomposeoverview.ui.compose_way.widgets.ToolbarWidget
 import com.anupdey.jetpackcomposeoverview.ui.theme.JetpackComposeOverviewTheme
 import com.anupdey.jetpackcomposeoverview.ui.xml_way.RepoSearchActivity
@@ -28,26 +30,30 @@ import com.anupdey.jetpackcomposeoverview.ui.xml_way.RepoSearchActivity
 @Composable
 fun DashboardScreenPreview() {
     JetpackComposeOverviewTheme {
-        DashboardScreen()
+        //DashboardScreen()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            ToolbarWidget(false)
+            ToolbarWidget(showBackBtn = false, onNavClicked = {
+                navController.popBackStack()
+            })
         },
         content = { padding ->
-            //MenuWidget(padding = padding)
-            ListScreen()
+            MenuWidget(navController = navController, padding = padding)
         }
     )
 }
 
 @Composable
-private fun MenuWidget(padding: PaddingValues = PaddingValues(0.dp)) {
+private fun MenuWidget(
+    navController: NavHostController,
+    padding: PaddingValues = PaddingValues(0.dp)
+) {
     val currentContext = LocalContext.current
     Column(
         modifier = Modifier
@@ -67,9 +73,13 @@ private fun MenuWidget(padding: PaddingValues = PaddingValues(0.dp)) {
         ) {
             Text(text = "XML Way ➤")
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(
-            onClick = { },
+            onClick = {
+                navController.navigate(route = Screen.RepoList.route)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)

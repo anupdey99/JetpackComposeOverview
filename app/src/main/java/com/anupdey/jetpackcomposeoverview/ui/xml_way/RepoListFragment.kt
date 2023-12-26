@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anupdey.jetpackcomposeoverview.databinding.FragmentRepoListBinding
 import com.anupdey.jetpackcomposeoverview.ui.common.MainViewModel
@@ -17,7 +17,7 @@ class RepoListFragment : Fragment() {
     private var _binding: FragmentRepoListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     private val dataAdapter = DataAdapter()
 
@@ -43,6 +43,7 @@ class RepoListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initList()
         searchRepo()
+        initListener()
     }
 
     private fun initList() {
@@ -57,12 +58,21 @@ class RepoListFragment : Fragment() {
         viewModel.repoList.observe(viewLifecycleOwner) { list ->
             dataAdapter.initList(list)
         }
-        viewModel.searchRepositories()
+    }
+
+    private fun initListener() {
+        dataAdapter.setListener { id ->
+            goToDetails(id)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun goToDetails(id: Int) {
+        (activity as? RepoSearchActivity)?.goToRepoDetailsFragment(id)
     }
 
 }

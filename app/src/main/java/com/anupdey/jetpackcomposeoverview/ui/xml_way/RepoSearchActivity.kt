@@ -8,7 +8,7 @@ import com.anupdey.jetpackcomposeoverview.databinding.ActivityRepoSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RepoSearchActivity: AppCompatActivity() {
+class RepoSearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRepoSearchBinding
 
@@ -26,7 +26,11 @@ class RepoSearchActivity: AppCompatActivity() {
         binding.appToolbar.toolbarBtn.apply {
             isVisible = true
             setOnClickListener {
-                finish()
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                } else {
+                    finish()
+                }
             }
         }
     }
@@ -37,6 +41,17 @@ class RepoSearchActivity: AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().apply {
             replace(binding.container.id, fragment, tag)
+            commit()
+        }
+    }
+
+    fun goToRepoDetailsFragment(id: Int) {
+        val fragment = RepoDetailsFragment.newInstance(id)
+        val tag = RepoDetailsFragment.tag
+
+        supportFragmentManager.beginTransaction().apply {
+            add(binding.container.id, fragment, tag)
+            addToBackStack(tag)
             commit()
         }
     }

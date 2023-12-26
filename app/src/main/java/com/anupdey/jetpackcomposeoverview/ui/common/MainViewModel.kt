@@ -24,12 +24,20 @@ class MainViewModel @Inject constructor(
     private val _repoListState: MutableState<List<RepoInfo>> = mutableStateOf(emptyList())
     val repoListState: State<List<RepoInfo>> = _repoListState
 
-    fun searchRepositories() {
+    init {
+        searchRepositories()
+    }
+
+    private fun searchRepositories() {
         viewModelScope.launch {
             val response = repository.searchRepositories()
             _repoList.value = response
             _repoListState.value = response
         }
+    }
+
+    fun fetchByRepoId(id: Int?): RepoInfo? {
+        return _repoList.value?.find { it.id == id }
     }
 
 }

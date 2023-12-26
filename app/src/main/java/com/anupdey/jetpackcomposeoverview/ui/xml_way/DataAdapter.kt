@@ -11,6 +11,10 @@ import com.bumptech.glide.Glide
 class DataAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val dataList: MutableList<RepoInfo> = mutableListOf()
+    private var listener: ((id: Int) -> Unit)? = null
+    fun setListener(listener: ((id: Int) -> Unit)) {
+        this.listener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -35,6 +39,16 @@ class DataAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     inner class ViewHolder(private val binding: LayoutRepoItemBinding): RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val model = dataList[position]
+                    listener?.invoke(model.id)
+                }
+            }
+        }
 
         fun bind(model: RepoInfo, position: Int) {
             binding.repoName.text = model.name

@@ -1,6 +1,5 @@
 package com.anupdey.jetpackcomposeoverview.ui.compose_way.widgets
 
-import android.app.Activity
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,7 +18,7 @@ import com.anupdey.jetpackcomposeoverview.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToolbarWidget(showBackBtn: Boolean = true) {
+fun ToolbarWidget(showBackBtn: Boolean = true, onNavClicked: (() -> Unit)? = null) {
     val currentContext = LocalContext.current
     CenterAlignedTopAppBar(
         modifier = Modifier.fillMaxWidth(),
@@ -33,7 +32,7 @@ fun ToolbarWidget(showBackBtn: Boolean = true) {
         },
         navigationIcon = {
             if (showBackBtn) {
-                IconButton(onClick = { (currentContext as Activity).finish() }) {
+                IconButton(onClick = { onNavClicked?.invoke() }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back",
